@@ -29,7 +29,7 @@ const init = async () => {
     // scene.add( directionalLight );
     //
     renderer.setPixelRatio( window.devicePixelRatio );
-    renderRayMarchedSpheres();
+    await renderRayMarchedSpheres();
 };
 
 export default init;

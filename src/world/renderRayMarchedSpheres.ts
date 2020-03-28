@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {camera, scene, sceneHeight, sceneWidth} from "./init";
 
 const renderRayMarchedSphered = async () => {
+    const commonDistanceFunctions = await fetch("shaders/commonDistanceFunctions.frag").then(response => response.text());
     const fragmentShader = await fetch("shaders/circlesFragmentShader.frag").then(response => response.text());
     const vertexShader = await fetch("shaders/circlesVertexShader.vert").then(response => response.text());
 
@@ -17,7 +18,7 @@ const renderRayMarchedSphered = async () => {
             cameraProjectionMatrixInverse: { value: new THREE.Matrix4().getInverse( camera.projectionMatrix ) }
         },
         vertexShader: vertexShader,
-        fragmentShader: fragmentShader
+        fragmentShader: commonDistanceFunctions + fragmentShader
     } );
     const mesh = new THREE.Mesh( geometry, material );
     mesh.frustumCulled = false;

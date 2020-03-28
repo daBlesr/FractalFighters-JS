@@ -16,7 +16,7 @@ const init = async () => {
     // camera controls
     controls.enableKeys = false;
     controls.maxPolarAngle = Math.PI * 0.5;
-    camera.position.set(200, 200, 50);
+    camera.position.set(0, 5, 0);
     controls.update();
 
     renderer.setSize( sceneWidth, sceneHeight );

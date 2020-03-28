@@ -13,12 +13,7 @@ const float OFFSET = EPS * 100.0;
 const vec3 lightDir = vec3(-0.48666426339228763, 0.8111071056538127, -0.3244428422615251);
 
 // distance functions
-vec3 opRep(vec3 p, float interval) {
 
-    vec2 q = mod(p.xz, interval) - interval * 0.5;
-    return vec3(q.x, p.y, q.y);
-
-}
 
 float sphereDist(vec3 p, float r) {
 
@@ -26,9 +21,13 @@ float sphereDist(vec3 p, float r) {
 
 }
 
+float boxes(vec3 p) {
+    return roundBox(repeat(p, vec3(20.0, 0, 20.0)), vec3(1.0, 5.0, 1.0), 0.1);
+}
+
 float floorDist(vec3 p){
 
-    return dot(p, vec3(0.0, 1.0, 0.0)) + 1.0;
+    return dot(p, vec3(0.0, 1.0, 0.0)) + 0.01;
 
 }
 
@@ -38,24 +37,20 @@ vec4 minVec4(vec4 a, vec4 b) {
 
 }
 
-vec3 hsv2rgb(vec3 c) {
-
-    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-
-}
-
 float sceneDist(vec3 p) {
 
-    return sphereDist(p, 1.0);
+    return min(
+        boxes(p),
+        floorDist(p)
+    );
 
 }
 
 vec4 sceneColor(vec3 p) {
-
-    return vec4(vec3(0.8), sphereDist(p, 1.0));
-
+    return minVec4(
+        vec4(vec3(25.0 / 255.0, 255.0 / 255.0, 71.0/ 255.0), boxes(p)),
+        vec4(vec3(255.0 / 255.0, 101.0 / 255.0, 54.0 / 255.0), floorDist(p))
+    );
 }
 
 vec3 getNormal(vec3 p) {
@@ -75,7 +70,7 @@ vec3 getRayColor(vec3 origin, vec3 ray, out vec3 pos, out vec3 normal, out bool 
     float depth = 0.0;
     pos = origin;
 
-    for (int i = 0; i < 64; i++){
+    for (int i = 0; i < 150; i++){
 
         dist = sceneDist(pos);
         depth += dist;

@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import {camera, scene, sceneHeight, sceneWidth} from "./init";
 
+export const rayMarchingShader = new THREE.RawShaderMaterial( );
+
 const renderRayMarchedSphered = async () => {
     const commonDistanceFunctions = await fetch("shaders/commonDistanceFunctions.frag").then(response => response.text());
     const fragmentShader = await fetch("shaders/circlesFragmentShader.frag").then(response => response.text());
@@ -11,16 +13,17 @@ const renderRayMarchedSphered = async () => {
     group.add( camera );
 
     const geometry = new THREE.PlaneBufferGeometry( 2.0, 2.0 );
-    const material = new THREE.RawShaderMaterial( {
-        uniforms: {
-            resolution: { value: new THREE.Vector2( sceneWidth, sceneHeight) },
-            cameraWorldMatrix: { value: camera.matrixWorld },
-            cameraProjectionMatrixInverse: { value: new THREE.Matrix4().getInverse( camera.projectionMatrix ) }
-        },
-        vertexShader: vertexShader,
-        fragmentShader: commonDistanceFunctions + fragmentShader
-    } );
-    const mesh = new THREE.Mesh( geometry, material );
+
+    rayMarchingShader.uniforms = {
+        time: { value: 0 },
+        resolution: { value: new THREE.Vector2( sceneWidth, sceneHeight) },
+        cameraWorldMatrix: { value: camera.matrixWorld },
+        cameraProjectionMatrixInverse: { value: new THREE.Matrix4().getInverse( camera.projectionMatrix ) }
+    };
+    rayMarchingShader.vertexShader = vertexShader;
+    rayMarchingShader.fragmentShader = commonDistanceFunctions + fragmentShader;
+
+    const mesh = new THREE.Mesh( geometry, rayMarchingShader );
     mesh.frustumCulled = false;
     scene.add( mesh );
 };

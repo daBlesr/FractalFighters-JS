@@ -32,7 +32,7 @@ const init = async () => {
     //
     renderer.setPixelRatio( window.devicePixelRatio );
     await renderRayMarchedScene();
-    await renderSpaceShip();
+    await renderSpaceShip(scene);
 };
 
 export default init;

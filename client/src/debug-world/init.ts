@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {base} from "./base";
 import renderSpaceShip from "../world/spaceship";
+import {RENDERABLES} from "../ui/constants";
 
 export const sceneWidth = window.innerWidth * 0.7;
 export const sceneHeight = window.innerHeight * 0.7;
@@ -11,19 +12,17 @@ export const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 const controls = new OrbitControls( camera, renderer.domElement );
 
-const init = async () => {
+const init = async (renderable: RENDERABLES) => {
     scene.add(base);
-
+    console.log('initiliazting debug world with ', renderable);
     // camera controls
-    // controls.enableKeys = false;
     camera.position.set(20, 5, -10);
     camera.lookAt(0, 0, 0);
     controls.update();
 
     renderer.setSize( sceneWidth, sceneHeight );
-    //
     base.position.set(0, -0.1,0);
-    renderer.setClearColor("#fffaed", 1 );
+    renderer.setClearColor("white", 1 );
 
     const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
     directionalLight.position.set(100, 100, 0);
@@ -31,7 +30,11 @@ const init = async () => {
 
     renderer.setPixelRatio( window.devicePixelRatio );
 
-    await renderSpaceShip();
+    switch (renderable) {
+        case RENDERABLES.SPACESHIP:
+            await renderSpaceShip(scene);
+    }
+    console.log('reached');
 };
 
 export default init;

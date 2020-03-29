@@ -5,7 +5,7 @@ import {rayMarchingShader} from "./renderRayMarchedSpheres";
 const animate = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     rayMarchingShader.uniforms.time = { value: new Date().getTime() - 1585422287184 };
-    camera.position.setZ(camera.position.z + 1);
+    // camera.position.setZ(camera.position.z + 1);
     renderer.render( scene, camera );
     requestAnimationFrame(animate);
 };

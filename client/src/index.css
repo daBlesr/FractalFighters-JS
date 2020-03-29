@@ -6,7 +6,7 @@ body, html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: #c7e7f2;
+  background-color: black;
 }
 
 code {
@@ -15,5 +15,5 @@ code {
 }
 
 body, .root, .sceneContainer {
-  background-color: #c7e7f2 !important;
+  background-color: black !important;
 }

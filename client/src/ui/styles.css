@@ -1,0 +1,12 @@
+
+.c-ui-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 60vw;
+    margin: 200px;
+}
+
+.c-ui-container > * {
+    margin: 20px;
+}

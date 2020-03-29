@@ -4,9 +4,10 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import World from "./world";
 import 'antd/dist/antd.css';
+import UI from "./ui";
 
 ReactDOM.render(
-    <World />
+    <UI />
     , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

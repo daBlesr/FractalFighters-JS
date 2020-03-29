@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-import renderRayMarchedSpheres from "./renderRayMarchedSpheres";
+import renderRayMarchedScene from "./renderRayMarchedScene";
 import {TrackballControls} from "three/examples/jsm/controls/TrackballControls";
 
 export const sceneWidth = window.innerWidth * 0.7;
@@ -9,17 +9,16 @@ export const camera = new THREE.PerspectiveCamera(60, sceneWidth / sceneHeight, 
 export const scene = new THREE.Scene();
 export const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-// const controls = new THREE. TrackballControls( camera, renderer.domElement );
+const controls = new OrbitControls( camera, renderer.domElement );
 
 const init = async () => {
     // scene.add(base);
 
     // camera controls
     // controls.enableKeys = false;
-    // controls.maxPolarAngle = Math.PI * 0.5;
-    camera.position.set(20, 5, 0);
+    camera.position.set(20, 5, -10);
     camera.lookAt(0, 0, 0);
-    // controls.update();
+    controls.update();
 
     renderer.setSize( sceneWidth, sceneHeight );
     //
@@ -31,7 +30,7 @@ const init = async () => {
     // scene.add( directionalLight );
     //
     renderer.setPixelRatio( window.devicePixelRatio );
-    await renderRayMarchedSpheres();
+    await renderRayMarchedScene();
 };
 
 export default init;

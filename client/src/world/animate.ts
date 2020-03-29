@@ -1,6 +1,6 @@
 
 import {camera, renderer, scene} from "./init";
-import {rayMarchingShader} from "./renderRayMarchedSpheres";
+import {rayMarchingShader} from "./renderRayMarchedScene";
 
 const animate = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions

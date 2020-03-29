@@ -3,10 +3,10 @@ import {camera, scene, sceneHeight, sceneWidth} from "./init";
 
 export const rayMarchingShader = new THREE.RawShaderMaterial( );
 
-const renderRayMarchedSphered = async () => {
+const renderRayMarchedScene = async () => {
     const commonDistanceFunctions = await fetch("shaders/commonDistanceFunctions.frag").then(response => response.text());
-    const fragmentShader = await fetch("shaders/circlesFragmentShader.frag").then(response => response.text());
-    const vertexShader = await fetch("shaders/circlesVertexShader.vert").then(response => response.text());
+    const fragmentShader = await fetch("shaders/mengerShader.frag").then(response => response.text());
+    const vertexShader = await fetch("shaders/basicVertexShader.vert").then(response => response.text());
 
     const group = new THREE.Group();
     scene.add( group );
@@ -28,4 +28,4 @@ const renderRayMarchedSphered = async () => {
     scene.add( mesh );
 };
 
-export default renderRayMarchedSphered;
+export default renderRayMarchedScene;

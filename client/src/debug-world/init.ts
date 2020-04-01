@@ -22,7 +22,7 @@ const init = async (renderable: RENDERABLES) => {
 
     renderer.setSize( sceneWidth, sceneHeight );
     base.position.set(0, -0.1,0);
-    renderer.setClearColor("white", 1 );
+    renderer.setClearColor("black", 1 );
 
     const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
     directionalLight.position.set(100, 100, 0);

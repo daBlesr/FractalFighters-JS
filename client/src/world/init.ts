@@ -13,7 +13,6 @@ export const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls( camera, renderer.domElement );
 
 const init = async () => {
-    // scene.add(base);
 
     // camera controls
     // controls.enableKeys = false;
@@ -21,18 +20,16 @@ const init = async () => {
     camera.lookAt(0, 0, 0);
     controls.update();
 
+    const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    directionalLight.position.set(100, 100, 0);
+    scene.add( directionalLight );
+
     renderer.setSize( sceneWidth, sceneHeight );
-    //
-    // base.position.set(0, -0.1,0);
-    // renderer.setClearColor("#fffaed", 1 );
-    //
-    // const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-    // directionalLight.position.set(100, 100, 0);
-    // scene.add( directionalLight );
-    //
     renderer.setPixelRatio( window.devicePixelRatio );
-    await renderRayMarchedScene();
+    renderer.extensions.get("EXT_frag_depth");
+
     await renderSpaceShip(scene);
+    await renderRayMarchedScene();
 };
 
 export default init;

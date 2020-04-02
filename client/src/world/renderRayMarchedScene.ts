@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {camera, scene, sceneHeight, sceneWidth} from "./init";
 
-export const rayMarchingShader = new THREE.RawShaderMaterial({ blending: THREE.AdditiveBlending } );
+export const rayMarchingShader = new THREE.RawShaderMaterial(  );
 
 // original raymarching was done on the basis of
 // https://threejs.org/examples/?q=raym#webgl_raymarching_reflect

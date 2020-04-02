@@ -12,22 +12,20 @@ uniform int time;
 const float EPS = 0.001;
 const vec3 lightDir = vec3(-0.48666426339228763, 0.8111071056538127, -0.3244428422615251);
 const float INFINITY = 3.402823466e+38;
-// distance functions
-//float sinTime = sin(float(time) / 500.0);
+const int MAX_ITERATIONS = 20;
 
 float _DistanceFunction(vec3 pos) {
 //    return Sphere(p, 5.0);
-    float scale = 10.0;
+    float scale = 100.0;
     vec3 repeater = pos / scale;
     repeater = Repeat(repeater + 1.0, 2.0);
-    return max(MagicBox(repeater) * scale, Box(pos, vec3(10))); // , Box(pos, 1000));
+    return max(MagicBox(repeater) * scale, Box(pos, vec3(400))); // , Box(pos, 1000));
 }
 
 vec3 getRayColor(inout Ray ray) {
 
     // marching loop
     float dist;
-    const int MAX_ITERATIONS = 20;
 
     for (int i = 0; i < MAX_ITERATIONS; i++){
         ray.iter = i;
@@ -46,7 +44,7 @@ vec3 getRayColor(inout Ray ray) {
     if (abs(dist) < EPS) {
         float light = (dot(rayNormal, lightDir) + 1.0) * 0.9; // half lambert
         float ao = 1.0 - 1.0 *  float(ray.iter) / float(MAX_ITERATIONS); // ambient occlusion using raymarching loop count
-        color = vec3(light * ao);
+        color = vec3(209.0 / 255.0, 195.0 / 255.0, 0.0) * light * ao;
         ray.hit = true;
         return color;
     } else {
@@ -75,8 +73,23 @@ void main(void) {
     vec3 color = vec3(0.0);
 
     color = getRayColor(ray);
+    float clampedRayDepth = clamp(ray.depth / 1000.0, 0.0, 1.0);
 
-    gl_FragColor = vec4(color, 1.0);
+    if (ray.hit) {
+        gl_FragColor = vec4(color, 1.0);
+    } else {
+        vec3 bgColor = vec3(
+            20.0 / 255.0 * clampedRayDepth,
+            17.0 / 255.0 * clampedRayDepth,
+            51.0 / 255.0 * clampedRayDepth
+        );
+        bgColor *= rayDirectionWorldCoordinate;
+
+        gl_FragColor = vec4(
+            bgColor,
+            1.0
+        );
+    }
 
     // https://www.iquilezles.org/www/articles/raypolys/raypolys.htm
     float zc = ( cameraProjectionMatrix * vec4( ray.target, 1.0 ) ).z;

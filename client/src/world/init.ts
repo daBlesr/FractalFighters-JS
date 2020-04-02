@@ -27,7 +27,6 @@ const init = async () => {
     renderer.setSize( sceneWidth, sceneHeight );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.extensions.get("EXT_frag_depth");
-
     await renderSpaceShip(scene);
     await renderRayMarchedScene();
 };

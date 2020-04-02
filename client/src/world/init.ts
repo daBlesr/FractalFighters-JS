@@ -2,7 +2,8 @@ import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import renderRayMarchedScene from "./renderRayMarchedScene";
 import {TrackballControls} from "three/examples/jsm/controls/TrackballControls";
-import renderSpaceShip from "./spaceship";
+import initializeSpaceship from "./spaceship/init";
+import Spaceship from "./spaceship";
 
 export const sceneWidth = window.innerWidth * 0.7;
 export const sceneHeight = window.innerHeight * 0.7;
@@ -27,7 +28,9 @@ const init = async () => {
     renderer.setSize( sceneWidth, sceneHeight );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.extensions.get("EXT_frag_depth");
-    await renderSpaceShip(scene);
+
+    await initializeSpaceship();
+    new Spaceship(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3());
     await renderRayMarchedScene();
 };
 

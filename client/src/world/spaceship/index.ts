@@ -1,25 +1,36 @@
 import * as THREE from "three";
-import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
+import Renderable from "../engine/Renderable";
+import * as assert from "assert";
+import * as Assert from "assert";
 
-const loader = new GLTFLoader();
-const material = new THREE.MeshToonMaterial( { color: "#d9dcfc" } );
-const deckMaterial = new THREE.MeshToonMaterial( { color: "#d1d5ff" } );
+class Spaceship extends Renderable {
+    private static SPACESHIP_MESH: THREE.Mesh;
 
-const renderSpaceShip = async (scene: THREE.Scene) => {
-    loader.load( 'meshes/space-shuttle.glb', function ( gltf ) {
-        const importedScene = gltf.scene;
-        const spaceShuttle = importedScene.getObjectByName("SpaceShuttle") as THREE.Mesh;
-        spaceShuttle.material = material;
+    private mesh: THREE.Mesh;
+    private camera: THREE.Camera;
 
-        const deck = spaceShuttle.children[0] as THREE.Mesh;
-        deck.material = deckMaterial;
+    constructor(scene: THREE.Scene, position: THREE.Vector3, direction: THREE.Vector3) {
+        super();
 
-        importedScene.position.set(20, 20, 20);
-        scene.add(importedScene);
-    }, undefined, function ( error ) {
-        console.error( error );
-    } );
+        Assert.notEqual(Spaceship.SPACESHIP_MESH, null, "Mesh should be initialized before constructing object");
 
-};
+        this.position = position;
+        this.direction = direction;
+        this.velocity = 0;
+        this.mesh = Spaceship.SPACESHIP_MESH.clone(true);
+        this.mesh.position.copy(position);
 
-export default renderSpaceShip;
+        scene.add(this.mesh);
+    }
+
+    public static setMesh(mesh: THREE.Mesh) {
+        Spaceship.SPACESHIP_MESH = mesh;
+    }
+
+    public controlledByPlayer(camera: THREE.Camera) {
+        this.camera = camera;
+        
+    }
+}
+
+export default Spaceship;

@@ -3,6 +3,8 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {base} from "./base";
 import renderSpaceShip from "../world/spaceship";
 import {RENDERABLES} from "../ui/constants";
+import initializeSpaceship from "../world/spaceship/init";
+import Spaceship from "../world/spaceship";
 
 export const sceneWidth = window.innerWidth * 0.7;
 export const sceneHeight = window.innerHeight * 0.7;
@@ -32,7 +34,8 @@ const init = async (renderable: RENDERABLES) => {
 
     switch (renderable) {
         case RENDERABLES.SPACESHIP:
-            await renderSpaceShip(scene);
+            await initializeSpaceship();
+            new Spaceship(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3());
     }
     console.log('reached');
 };

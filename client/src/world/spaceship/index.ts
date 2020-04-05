@@ -31,18 +31,28 @@ class Spaceship implements DynamicGameEntity, InputListener {
     }
 
     public shoot() {
-        const bullet = new Bullet(this.game);
-        bullet.getRigidBody().getTransform().setWorldVelocity(
+        const bulletL = new Bullet(this.game);
+        const bulletR = new Bullet(this.game);
+
+        // rotate bullet to rotation of ship.
+        const bulletRotation = this.rigidBody.getTransform().projectLocalToObjectSpace(new Vector3(0, 0, 2));
+
+        bulletL.getRigidBody().getTransform().setWorldVelocity(bulletRotation);
+        bulletR.getRigidBody().getTransform().setWorldVelocity(bulletRotation);
+
+        bulletL.getRigidBody().setWorldPosition(
             this.rigidBody.getTransform().projectLocalToWorldSpace(
-                new Vector3(0, 0, 100)
+                new Vector3(1, 0, 2)
             )
         );
-        bullet.getRigidBody().setWorldPosition(
+        bulletR.getRigidBody().setWorldPosition(
             this.rigidBody.getTransform().projectLocalToWorldSpace(
                 new Vector3(-1, 0, 2)
             )
         );
-        this.game.getGameState().addObject(bullet);
+
+        this.game.getGameState().addObject(bulletL);
+        this.game.getGameState().addObject(bulletR);
     }
 
     update(step: number) {
@@ -74,6 +84,11 @@ class Spaceship implements DynamicGameEntity, InputListener {
                 new Vector3(0, 0, 0.5)
             )
         );
+
+        if (DualShockGamepad.getButtonR2(this.game.getGamepad())) {
+            console.log('shooting');
+            this.shoot();
+        }
 
     }
 

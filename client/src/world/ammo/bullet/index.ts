@@ -6,7 +6,7 @@ import Game from "../../../engine/Game";
 import Transform from "../../../engine/Transform";
 
 class Bullet implements DynamicGameEntity {
-    private geometry = new THREE.CylinderGeometry(0.02, 0.02, 0.5, 32);
+    private geometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 32);
     private material = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(70 / 255, 126 / 255, 224 / 255)});
     private rigidBody = new RigidBody();
 

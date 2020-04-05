@@ -1,37 +1,27 @@
 import * as THREE from "three";
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import renderRayMarchedScene from "./renderRayMarchedScene";
-import {TrackballControls} from "three/examples/jsm/controls/TrackballControls";
 import initializeSpaceship from "./spaceship/init";
 import Spaceship from "./spaceship";
+import OrbitCamera from "../engine/cameras/OrbitCamera";
+import Game from "../engine/Game";
 
-export const sceneWidth = window.innerWidth * 0.7;
-export const sceneHeight = window.innerHeight * 0.7;
-export const camera = new THREE.PerspectiveCamera(60, sceneWidth / sceneHeight, 1, 3000);
-export const scene = new THREE.Scene();
-export const renderer = new THREE.WebGLRenderer({ antialias: true });
+export const sceneWidth = window.innerWidth;
+export const sceneHeight = window.innerHeight;
 
-const controls = new OrbitControls( camera, renderer.domElement );
+const init = async (game: Game) => {
 
-const init = async () => {
-    //
-    // // camera controls
-    // // controls.enableKeys = false;
-    // camera.position.set(20, 5, -10);
-    // camera.lookAt(0, 0, 0);
-    // controls.update();
-    //
-    // const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-    // directionalLight.position.set(100, 100, 0);
-    // scene.add( directionalLight );
-    //
-    // renderer.setSize( sceneWidth, sceneHeight );
-    // renderer.setPixelRatio( window.devicePixelRatio );
-    // renderer.extensions.get("EXT_frag_depth");
-    //
-    // await initializeSpaceship();
-    // new Spaceship();
-    // await renderRayMarchedScene();
+    const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    directionalLight.position.set(100, 100, 0);
+    game.getScene().add( directionalLight );
+
+    game.getRenderer().setSize( sceneWidth, sceneHeight );
+    game.getRenderer().setPixelRatio( window.devicePixelRatio );
+    game.getRenderer().extensions.get("EXT_frag_depth");
+
+    await initializeSpaceship();
+    game.setCameraHandler(new OrbitCamera(game));
+    game.getGameState().addObject(new Spaceship(game));
+    await renderRayMarchedScene(game);
 };
 
 export default init;

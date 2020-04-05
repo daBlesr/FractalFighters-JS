@@ -19,15 +19,8 @@ class PlayerCamera implements CameraHandler {
 
     watch(entity: RigidBody): void {
         this.watchable = entity;
-        this.watchable.getMesh().add(this.game.getCamera());
-        this.game.getCamera().position.add(this.offset);
-        this.game.getCamera().lookAt(
-            this.watchable
-                .getTransform()
-                .getWorldPosition()
-                .clone()
-                .add(this.lookatOffset)
-        );
+        // this.watchable.getMesh().add(this.game.getCamera());
+
     };
 
     input(): void {
@@ -36,27 +29,23 @@ class PlayerCamera implements CameraHandler {
     }
 
     update(step: number): void {
-        // const camera = this.game.getCamera();
+        const camera = this.game.getCamera();
 
-        // // local space
-        // const newCameraPosition = new Vector3().copy(this.offset);
-        //
-        // // rotate camera around object according to object rotation itself in local space
-        // // newCameraPosition.applyQuaternion(this.watchable.getTransform().getObjectRotation());
-        // // newCameraPosition.add(this.watchable
-        // //     .getTransform()
-        // //     .getWorldPosition()
-        // // );
-        // //
-        // camera.position.copy(newCameraPosition);
-        //
-        // camera.lookAt(
-        //     this.watchable
-        //         .getTransform()
-        //         .getWorldPosition()
-        //         .clone()
-        //         .add(this.lookatOffset)
-        // );
+        const newCameraPosition = new Vector3().copy(this.offset);
+
+        newCameraPosition.add(this.watchable
+            .getTransform()
+            .getWorldPosition()
+        );
+
+        camera.position.copy(newCameraPosition);
+        camera.lookAt(
+            this.watchable
+                .getTransform()
+                .getWorldPosition()
+                .clone()
+                .add(this.lookatOffset)
+        );
     }
 
     getTransform(): Transform {

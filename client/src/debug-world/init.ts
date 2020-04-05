@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import {Color, Mesh, MeshBasicMaterial, PlaneGeometry} from "three";
 import {base} from "./base";
 import Spaceship from "../world/spaceship";
 import {RENDERABLES} from "../ui/constants";
@@ -7,7 +6,6 @@ import initializeSpaceship from "../world/spaceship/init";
 import Bullet from "../world/ammo/bullet";
 import Game from "../engine/Game";
 import OrbitCamera from "../engine/cameras/OrbitCamera";
-import PlayerCamera from "../engine/cameras/PlayerCamera";
 import renderPlayground from "./renderPlayground";
 
 export const sceneWidth = window.innerWidth;

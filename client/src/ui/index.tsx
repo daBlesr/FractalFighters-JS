@@ -11,24 +11,21 @@ const UI = () => {
     if (renderable === undefined) {
         return (
             <div className="c-ui-container">
-                <Card title="World" style={{ width: 300 }}>
-                    <Button
-                        size="large"
-                        type="primary"
-                        onClick={() => setRenderable(RENDERABLES.WORLD)}
-                    >
-                        Render
-                    </Button>
-                </Card>
-                <Card title="Space shuttle" style={{ width: 300 }}>
-                    <Button
-                        size="large"
-                        type="primary"
-                        onClick={() => setRenderable(RENDERABLES.SPACESHIP)}
-                    >
-                        Render
-                    </Button>
-                </Card>
+                {Object
+                    .keys(RENDERABLES)
+                    .filter(key => !Number.isNaN(parseInt(key)))
+                    .map(renderable => (
+                        <Card title={RENDERABLES[renderable]} style={{ width: 300 }}>
+                            <Button
+                                size="large"
+                                type="primary"
+                                onClick={() => setRenderable(parseInt(renderable))}
+                            >
+                                Render
+                            </Button>
+                        </Card>
+                    )
+                )}
             </div>
         );
     }

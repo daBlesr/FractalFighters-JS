@@ -15,6 +15,7 @@
     "@types/react-dom": "^16.9.0",
     "ammo.js": "^0.0.10",
     "antd": "^4.0.0",
+    "browser-game-loop": "^1.4.1",
     "d3": "^5.15.0",
     "d3-array": "^2.4.0",
     "d3-scale": "^3.2.1",

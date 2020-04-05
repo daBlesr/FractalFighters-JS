@@ -14,24 +14,24 @@ export const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls( camera, renderer.domElement );
 
 const init = async () => {
-
-    // camera controls
-    // controls.enableKeys = false;
-    camera.position.set(20, 5, -10);
-    camera.lookAt(0, 0, 0);
-    controls.update();
-
-    const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-    directionalLight.position.set(100, 100, 0);
-    scene.add( directionalLight );
-
-    renderer.setSize( sceneWidth, sceneHeight );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.extensions.get("EXT_frag_depth");
-
-    await initializeSpaceship();
-    new Spaceship(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3());
-    await renderRayMarchedScene();
+    //
+    // // camera controls
+    // // controls.enableKeys = false;
+    // camera.position.set(20, 5, -10);
+    // camera.lookAt(0, 0, 0);
+    // controls.update();
+    //
+    // const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    // directionalLight.position.set(100, 100, 0);
+    // scene.add( directionalLight );
+    //
+    // renderer.setSize( sceneWidth, sceneHeight );
+    // renderer.setPixelRatio( window.devicePixelRatio );
+    // renderer.extensions.get("EXT_frag_depth");
+    //
+    // await initializeSpaceship();
+    // new Spaceship();
+    // await renderRayMarchedScene();
 };
 
 export default init;

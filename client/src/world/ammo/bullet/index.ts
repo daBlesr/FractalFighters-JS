@@ -1,23 +1,36 @@
-
 import * as THREE from "three";
-import Renderable from "../../engine/Renderable";
+import {Quaternion, Vector3} from "three";
+import RigidBody from "../../../engine/RigidBody";
+import DynamicGameEntity from "../../../engine/DynamicGameEntity";
+import Game from "../../../engine/Game";
 
-class Bullet extends Renderable {
-    private geometry = new THREE.CylinderGeometry(5, 5, 20, 32);
+class Bullet implements DynamicGameEntity {
+    private geometry = new THREE.CylinderGeometry(0.02, 0.02, 0.5, 32);
     private material = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(70 / 255, 126 / 255, 224 / 255)});
-    private mesh: THREE.Mesh;
+    private rigidBody = new RigidBody();
 
-    constructor(scene: THREE.Scene, position: THREE.Vector3, direction: THREE.Vector3) {
-        super();
-        this.position = position;
-        this.direction = direction;
-        this.velocity = 20;
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.position.copy(position);
+    constructor(game: Game) {
+        this.rigidBody.setMesh(new THREE.Mesh(this.geometry, this.material));
 
-        scene.add(this.mesh);
+        this.rigidBody.setObjectRotation(
+            new Quaternion()
+                .setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2)
+        );
+
+        this.rigidBody.setWorldPosition(
+            this.rigidBody.getTransform().getWorldPosition().clone().sub(new Vector3(0, 0.1, 0))
+        );
+
+        game.getScene().add(this.rigidBody.getMesh());
     }
 
+    public getRigidBody = (): RigidBody => {
+        return this.rigidBody;
+    }
+
+    public update = (step: number) => {
+        this.rigidBody.update(step);
+    }
 }
 
 export default Bullet;

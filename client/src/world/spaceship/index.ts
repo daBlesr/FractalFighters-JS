@@ -1,26 +1,25 @@
 import * as THREE from "three";
-import Renderable from "../engine/Renderable";
-import * as assert from "assert";
+import RigidBody from "../../engine/RigidBody";
 import * as Assert from "assert";
+import Game from "../../engine/Game";
+import Bullet from "../ammo/bullet";
+import {Vector3} from "three";
+import DynamicGameEntity from "../../engine/DynamicGameEntity";
 
-class Spaceship extends Renderable {
+class Spaceship implements DynamicGameEntity {
     private static SPACESHIP_MESH: THREE.Mesh;
 
-    private mesh: THREE.Mesh;
+    private rigidBody: RigidBody = new RigidBody();
     private camera: THREE.Camera;
+    private game: Game;
 
-    constructor(scene: THREE.Scene, position: THREE.Vector3, direction: THREE.Vector3) {
-        super();
-
+    constructor(game: Game) {
         Assert.notEqual(Spaceship.SPACESHIP_MESH, null, "Mesh should be initialized before constructing object");
 
-        this.position = position;
-        this.direction = direction;
-        this.velocity = 0;
-        this.mesh = Spaceship.SPACESHIP_MESH.clone(true);
-        this.mesh.position.copy(position);
+        this.game = game;
+        this.rigidBody.setMesh(Spaceship.SPACESHIP_MESH.clone(true));
 
-        scene.add(this.mesh);
+        game.getScene().add(this.rigidBody.getMesh());
     }
 
     public static setMesh(mesh: THREE.Mesh) {
@@ -29,7 +28,25 @@ class Spaceship extends Renderable {
 
     public controlledByPlayer(camera: THREE.Camera) {
         this.camera = camera;
-        
+    }
+
+    public shoot() {
+        const bullet = new Bullet(this.game);
+        bullet.getRigidBody().getTransform().setWorldVelocity(
+            this.rigidBody.getTransform().projectLocalToWorldSpace(
+                new Vector3(0, 0, 100)
+            )
+        );
+        bullet.getRigidBody().setWorldPosition(
+            this.rigidBody.getTransform().projectLocalToWorldSpace(
+                new Vector3(-1, 0, 2)
+            )
+        );
+        this.game.getGameState().addObject(bullet);
+    }
+
+    update = (step: number) => {
+        this.rigidBody.update(step);
     }
 }
 

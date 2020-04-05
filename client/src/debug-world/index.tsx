@@ -1,18 +1,25 @@
 import * as React from "react";
 import {RENDERABLES} from "../ui/constants";
-import init, {renderer, sceneHeight, sceneWidth} from "./init";
-import animate from "./animate";
+import init, {sceneHeight, sceneWidth} from "./init";
+import Game from "../engine/Game";
+import * as THREE from "three";
 
 const DebugWorld: React.FC<{ renderable: RENDERABLES }> = ({ renderable }) => {
     const divRef = React.useRef<HTMLDivElement>();
 
-    init(renderable);
-    animate();
+    const camera = new THREE.PerspectiveCamera(60, sceneWidth / sceneHeight, 1, 3000);
+    const scene = new THREE.Scene();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    const game = new Game(renderer).setCamera(camera).setScene(scene);
+    game.start();
+
+    init(game, renderable);
 
     React.useEffect(
         () => {
             if (divRef.current) {
-                divRef.current.appendChild(renderer.domElement);
+                divRef.current.appendChild(game.getRenderer().domElement);
             }
             return () => {
                 divRef.current.removeChild(renderer.domElement);

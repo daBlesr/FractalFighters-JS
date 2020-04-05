@@ -1,4 +1,5 @@
 export enum RENDERABLES {
     WORLD,
-    SPACESHIP
+    SPACESHIP,
+    BULLET
 }

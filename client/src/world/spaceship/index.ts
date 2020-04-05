@@ -1,13 +1,15 @@
 import * as THREE from "three";
+import {Quaternion, Vector3} from "three";
 import RigidBody from "../../engine/RigidBody";
 import * as Assert from "assert";
 import Game from "../../engine/Game";
 import Bullet from "../ammo/bullet";
-import {Quaternion, Vector3} from "three";
 import DynamicGameEntity from "../../engine/DynamicGameEntity";
 import Transform from "../../engine/Transform";
+import InputListener from "../../engine/InputListener";
+import DualShockGamepad from "../../engine/DualShockGamepad";
 
-class Spaceship implements DynamicGameEntity {
+class Spaceship implements DynamicGameEntity, InputListener {
     private static SPACESHIP_MESH: THREE.Mesh;
 
     private rigidBody: RigidBody = new RigidBody();
@@ -20,6 +22,8 @@ class Spaceship implements DynamicGameEntity {
         this.rigidBody.setMesh(Spaceship.SPACESHIP_MESH.clone(true));
 
         game.getScene().add(this.rigidBody.getMesh());
+        game.addInputListener(this);
+
     }
 
     public static setMesh(mesh: THREE.Mesh) {
@@ -42,11 +46,36 @@ class Spaceship implements DynamicGameEntity {
     }
 
     update(step: number) {
+        this.getRigidBody().setWorldPosition(
+            this.getTransform().getWorldPosition().clone().add(new Vector3(0, 0, 1))
+        );
         this.rigidBody.update(step);
     };
 
-    public getTransform(): Transform {
+    getTransform(): Transform {
         return this.rigidBody.getTransform();
+    }
+
+    input(): void {
+        const movement = DualShockGamepad.getButtonLJoystick(this.game.getGamepad());
+
+        // local coordinate space
+        const rotation = new Quaternion()
+            .setFromAxisAngle(new Vector3(0, 0, 1), movement.x / 15)
+            .multiply(
+                new Quaternion()
+                    .setFromAxisAngle(new Vector3(-1, 0, 0), movement.y / 15)
+            );
+
+        this.rigidBody.setObjectRotation(
+            // object coordinate space
+            this.getTransform().getObjectRotation().clone().multiply(rotation)
+        );
+
+    }
+
+    getRigidBody(): RigidBody {
+        return this.rigidBody;
     }
 }
 

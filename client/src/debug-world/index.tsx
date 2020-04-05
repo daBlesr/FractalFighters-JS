@@ -31,7 +31,7 @@ const DebugWorld: React.FC<{ renderable: RENDERABLES }> = ({ renderable }) => {
     return (
         <div
             className={"sceneContainer"}
-            style={{ width: sceneWidth, height: sceneHeight, margin: "auto", marginTop: "15vh" }}
+            style={{ width: sceneWidth, height: sceneHeight, margin: "auto" }}
             ref={divRef}
         />
     )

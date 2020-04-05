@@ -58,7 +58,7 @@ class Game {
         }
     };
 
-    private getGamepad(): Gamepad {
+    public getGamepad(): Gamepad {
         return navigator.getGamepads()[this.gamepadIndex];
     };
 

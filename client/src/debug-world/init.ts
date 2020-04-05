@@ -46,6 +46,7 @@ const init = async (game: Game, renderable: RENDERABLES) => {
             plane.position.setY(-5);
             game.getScene().add(plane);
             const playerCamera = new PlayerCamera(game);
+            game.addInputListener(playerCamera);
             playerCamera.watch(spaceship);
             game.setCameraHandler(playerCamera);
             break;

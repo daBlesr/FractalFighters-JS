@@ -43,15 +43,19 @@ class Game {
             return;
         }
 
-        if (DualShockGamepad.getButtonX(this.getGamepad())) {
-            console.log("x pressed");
-        }
+        this.inputListeners.forEach(listener => {
+            listener.input();
+        })
     };
 
     private update(step: number): void {
         this.getGameState().objects.forEach(object => {
             object.update(step);
-        })
+        });
+
+        if (this.cameraHandler) {
+            this.cameraHandler.update(step);
+        }
     };
 
     private getGamepad(): Gamepad {

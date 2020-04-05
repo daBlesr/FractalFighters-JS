@@ -25,15 +25,15 @@ class Bullet implements DynamicGameEntity {
         game.getScene().add(this.rigidBody.getMesh());
     }
 
-    public getRigidBody = (): RigidBody => {
+    public getRigidBody(): RigidBody {
         return this.rigidBody;
     }
 
-    public update = (step: number) => {
+    public update(step: number) {
         this.rigidBody.update(step);
     }
 
-    public getTransform = (): Transform => {
+    public getTransform(): Transform {
         return this.getRigidBody().getTransform();
     }
 }

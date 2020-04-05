@@ -3,7 +3,7 @@ import RigidBody from "../../engine/RigidBody";
 import * as Assert from "assert";
 import Game from "../../engine/Game";
 import Bullet from "../ammo/bullet";
-import {Vector3} from "three";
+import {Quaternion, Vector3} from "three";
 import DynamicGameEntity from "../../engine/DynamicGameEntity";
 import Transform from "../../engine/Transform";
 
@@ -41,11 +41,11 @@ class Spaceship implements DynamicGameEntity {
         this.game.getGameState().addObject(bullet);
     }
 
-    update = (step: number) => {
+    update(step: number) {
         this.rigidBody.update(step);
-    }
+    };
 
-    public getTransform = (): Transform => {
+    public getTransform(): Transform {
         return this.rigidBody.getTransform();
     }
 }

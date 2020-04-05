@@ -2,6 +2,7 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {Camera} from "three";
 import Game from "../Game";
 import CameraHandler from "./CameraHandler";
+import Transform from "../Transform";
 
 class OrbitCamera implements CameraHandler {
 
@@ -24,6 +25,13 @@ class OrbitCamera implements CameraHandler {
         // orbitcontrols this does already.
     }
 
+    update(step: number): void {
+        // orbitcontrols this does already.
+    }
+
+    getTransform(): Transform {
+        throw new Error("not yet implemented");
+    }
 }
 
 export default OrbitCamera;

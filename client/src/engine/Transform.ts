@@ -6,41 +6,41 @@ class Transform {
     private worldVelocity: Vector3 = new Vector3();
     private objectRotation: Quaternion = new Quaternion();
 
-    public getWorldPosition = (): Vector3 => {
+    public getWorldPosition(): Vector3 {
         return this.worldPosition;
     };
 
-    public setWorldPosition = (value: Vector3): void => {
+    public setWorldPosition(value: Vector3): void {
         this.worldPosition = value;
     };
 
-    public getWorldVelocity = (): Vector3 => {
+    public getWorldVelocity(): Vector3 {
         return this.worldVelocity;
     };
 
-    public setWorldVelocity = (value: Vector3): void => {
+    public setWorldVelocity(value: Vector3): void {
         this.worldVelocity = value;
     };
 
-    public getObjectRotation = (): Quaternion => {
+    public getObjectRotation(): Quaternion {
         return this.objectRotation;
     };
 
-    public setObjectRotation = (value: Quaternion) => {
+    public setObjectRotation(value: Quaternion) {
         this.objectRotation = value;
     };
 
     // modifies input vector in place.
-    public projectLocalToObjectSpace = (vector: Vector3): Vector3 => {
+    public projectLocalToObjectSpace(vector: Vector3): Vector3 {
         return vector.applyQuaternion(this.objectRotation);
     };
 
     // modifies input vector in place.
-    public projectObjectToWorldSpace = (vector: Vector3): Vector3 => {
+    public projectObjectToWorldSpace(vector: Vector3): Vector3 {
         return vector.add(this.worldPosition);
     };
 
-    public projectLocalToWorldSpace = (vector: Vector3): Vector3 => {
+    public projectLocalToWorldSpace(vector: Vector3): Vector3 {
         return this.projectObjectToWorldSpace(
             this.projectLocalToObjectSpace(vector)
         );

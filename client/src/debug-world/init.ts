@@ -1,24 +1,19 @@
 import * as THREE from "three";
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import {Color, Mesh, MeshBasicMaterial, PlaneGeometry} from "three";
 import {base} from "./base";
 import Spaceship from "../world/spaceship";
 import {RENDERABLES} from "../ui/constants";
 import initializeSpaceship from "../world/spaceship/init";
 import Bullet from "../world/ammo/bullet";
 import Game from "../engine/Game";
+import OrbitCamera from "../engine/cameras/OrbitCamera";
+import PlayerCamera from "../engine/cameras/PlayerCamera";
 
 export const sceneWidth = window.innerWidth * 0.7;
 export const sceneHeight = window.innerHeight * 0.7;
 
 const init = async (game: Game, renderable: RENDERABLES) => {
     game.getScene().add(base);
-
-    // camera controls
-    game.getCamera().position.set(20, 5, -10);
-    game.getCamera().lookAt(0, 0, 0);
-
-    const controls = new OrbitControls( game.getCamera(), game.getRenderer().domElement );
-    controls.update();
 
     game.getRenderer().setSize( sceneWidth, sceneHeight );
     base.position.set(0, -0.1,0);
@@ -30,13 +25,29 @@ const init = async (game: Game, renderable: RENDERABLES) => {
 
     game.getRenderer().setPixelRatio( window.devicePixelRatio );
 
+    await initializeSpaceship();
+
     switch (renderable) {
         case RENDERABLES.SPACESHIP:
-            await initializeSpaceship();
+            game.setCameraHandler(new OrbitCamera(game));
             game.getGameState().addObject(new Spaceship(game));
             break;
         case RENDERABLES.BULLET:
+            game.setCameraHandler(new OrbitCamera(game));
             game.getGameState().addObject(new Bullet(game));
+            break;
+        case RENDERABLES.PLAYGROUND:
+            const spaceship = new Spaceship(game);
+            game.getGameState().addObject(spaceship);
+            const planeGeometry = new PlaneGeometry(1000, 1000, 100, 100);
+            planeGeometry.rotateX(Math.PI / 2.0);
+            const planeMaterial = new MeshBasicMaterial({ color: new Color().setRGB(0.3, 0.3, 0.3 ),  side: THREE.DoubleSide});
+            const plane = new Mesh(planeGeometry, planeMaterial)
+            plane.position.setY(-5);
+            game.getScene().add(plane);
+            const playerCamera = new PlayerCamera(game);
+            playerCamera.watch(spaceship);
+            game.setCameraHandler(playerCamera);
             break;
     }
 };

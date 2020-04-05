@@ -10,29 +10,29 @@ class RigidBody implements DynamicGameEntity {
     private transform: Transform = new Transform();
     private mesh: Mesh;
 
-    setMesh = (mesh: Mesh) => {
+    setMesh(mesh: Mesh) {
         this.mesh = mesh;
     };
 
-    getMesh = () => {
+    getMesh() {
         return this.mesh;
     };
 
-    getTransform = () => {
+    getTransform() {
         return this.transform;
     };
 
-    public setWorldPosition = (value: Vector3): void => {
+    public setWorldPosition(value: Vector3): void {
         this.transform.setWorldPosition(value);
         this.mesh.position.copy(value);
     };
 
-    public setObjectRotation = (value: Quaternion) => {
+    public setObjectRotation(value: Quaternion) {
         this.transform.setObjectRotation(value);
         this.mesh.rotation.setFromQuaternion(this.transform.getObjectRotation());
     };
 
-    update = (step: number): void => {
+    update(step: number): void {
         this.setWorldPosition(
             this.getTransform().getWorldPosition().clone()
                 .add(this.transform.getWorldVelocity())

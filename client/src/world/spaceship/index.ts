@@ -5,12 +5,12 @@ import Game from "../../engine/Game";
 import Bullet from "../ammo/bullet";
 import {Vector3} from "three";
 import DynamicGameEntity from "../../engine/DynamicGameEntity";
+import Transform from "../../engine/Transform";
 
 class Spaceship implements DynamicGameEntity {
     private static SPACESHIP_MESH: THREE.Mesh;
 
     private rigidBody: RigidBody = new RigidBody();
-    private camera: THREE.Camera;
     private game: Game;
 
     constructor(game: Game) {
@@ -24,10 +24,6 @@ class Spaceship implements DynamicGameEntity {
 
     public static setMesh(mesh: THREE.Mesh) {
         Spaceship.SPACESHIP_MESH = mesh;
-    }
-
-    public controlledByPlayer(camera: THREE.Camera) {
-        this.camera = camera;
     }
 
     public shoot() {
@@ -47,6 +43,10 @@ class Spaceship implements DynamicGameEntity {
 
     update = (step: number) => {
         this.rigidBody.update(step);
+    }
+
+    public getTransform = (): Transform => {
+        return this.rigidBody.getTransform();
     }
 }
 

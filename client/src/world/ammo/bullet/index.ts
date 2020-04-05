@@ -3,6 +3,7 @@ import {Quaternion, Vector3} from "three";
 import RigidBody from "../../../engine/RigidBody";
 import DynamicGameEntity from "../../../engine/DynamicGameEntity";
 import Game from "../../../engine/Game";
+import Transform from "../../../engine/Transform";
 
 class Bullet implements DynamicGameEntity {
     private geometry = new THREE.CylinderGeometry(0.02, 0.02, 0.5, 32);
@@ -30,6 +31,10 @@ class Bullet implements DynamicGameEntity {
 
     public update = (step: number) => {
         this.rigidBody.update(step);
+    }
+
+    public getTransform = (): Transform => {
+        return this.getRigidBody().getTransform();
     }
 }
 

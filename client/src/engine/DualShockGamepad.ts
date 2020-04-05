@@ -1,3 +1,4 @@
+import {Vector2} from "three";
 
 class DualShockGamepad {
 
@@ -61,14 +62,12 @@ class DualShockGamepad {
         return gamepad.buttons[10].pressed;
     }
 
-    public static getButtonRJoystick(gamepad: Gamepad): [number, number] {
-        // [hor, vert]
-        return [gamepad.axes[2], gamepad.axes[3]];
+    public static getButtonRJoystick(gamepad: Gamepad): Vector2 {
+        return new Vector2(gamepad.axes[2], gamepad.axes[3]);
     }
 
-    public static getButtonLJoystick(gamepad: Gamepad): [number, number] {
-        // [hor, vert]
-        return [gamepad.axes[0], gamepad.axes[1]];
+    public static getButtonLJoystick(gamepad: Gamepad): Vector2 {
+        return new Vector2(gamepad.axes[0], gamepad.axes[1]);
     }
 
 }

@@ -46,9 +46,6 @@ class Spaceship implements DynamicGameEntity, InputListener {
     }
 
     update(step: number) {
-        this.getRigidBody().setWorldPosition(
-            this.getTransform().getWorldPosition().clone().add(new Vector3(0, 0, 1))
-        );
         this.rigidBody.update(step);
     };
 
@@ -70,6 +67,12 @@ class Spaceship implements DynamicGameEntity, InputListener {
         this.rigidBody.setObjectRotation(
             // object coordinate space
             this.getTransform().getObjectRotation().clone().multiply(rotation)
+        );
+
+        this.getTransform().setWorldVelocity(
+            this.getTransform().projectLocalToObjectSpace(
+                new Vector3(0, 0, 0.5)
+            )
         );
 
     }

@@ -8,12 +8,14 @@ import DynamicGameEntity from "../../engine/DynamicGameEntity";
 import Transform from "../../engine/Transform";
 import InputListener from "../../engine/InputListener";
 import DualShockGamepad from "../../engine/DualShockGamepad";
+import Timer from "../../engine/Timer";
 
 class Spaceship implements DynamicGameEntity, InputListener {
     private static SPACESHIP_MESH: THREE.Mesh;
 
     private rigidBody: RigidBody = new RigidBody();
     private game: Game;
+    private bulletTimer = new Timer(300);
 
     constructor(game: Game) {
         Assert.notEqual(Spaceship.SPACESHIP_MESH, null, "Mesh should be initialized before constructing object");
@@ -31,28 +33,34 @@ class Spaceship implements DynamicGameEntity, InputListener {
     }
 
     public shoot() {
-        const bulletL = new Bullet(this.game);
-        const bulletR = new Bullet(this.game);
+        if (this.bulletTimer.use()) {
+            const bulletL = new Bullet(this.game);
+            const bulletR = new Bullet(this.game);
 
-        // rotate bullet to rotation of ship.
-        const bulletRotation = this.rigidBody.getTransform().projectLocalToObjectSpace(new Vector3(0, 0, 2));
+            // rotate bullet to rotation of ship.
+            bulletL.getRigidBody().setObjectRotation(this.getTransform().getObjectRotation().clone());
+            bulletR.getRigidBody().setObjectRotation(this.getTransform().getObjectRotation().clone());
 
-        bulletL.getRigidBody().getTransform().setWorldVelocity(bulletRotation);
-        bulletR.getRigidBody().getTransform().setWorldVelocity(bulletRotation);
+            const bulletRotation = this.rigidBody.getTransform().projectLocalToObjectSpace(new Vector3(0, 0, 2));
 
-        bulletL.getRigidBody().setWorldPosition(
-            this.rigidBody.getTransform().projectLocalToWorldSpace(
-                new Vector3(1, 0, 2)
-            )
-        );
-        bulletR.getRigidBody().setWorldPosition(
-            this.rigidBody.getTransform().projectLocalToWorldSpace(
-                new Vector3(-1, 0, 2)
-            )
-        );
+            bulletL.getRigidBody().getTransform().setWorldVelocity(bulletRotation);
+            bulletR.getRigidBody().getTransform().setWorldVelocity(bulletRotation);
 
-        this.game.getGameState().addObject(bulletL);
-        this.game.getGameState().addObject(bulletR);
+            bulletL.getRigidBody().setWorldPosition(
+                this.rigidBody.getTransform().projectLocalToWorldSpace(
+                    new Vector3(1, 0, 2)
+                )
+            );
+
+            bulletR.getRigidBody().setWorldPosition(
+                this.rigidBody.getTransform().projectLocalToWorldSpace(
+                    new Vector3(-1, 0, 2)
+                )
+            );
+
+            this.game.getGameState().addObject(bulletL);
+            this.game.getGameState().addObject(bulletR);
+        }
     }
 
     update(step: number) {

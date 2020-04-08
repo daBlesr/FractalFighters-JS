@@ -1,11 +1,14 @@
 import CameraHandler from "./CameraHandler";
 import DynamicGameEntity from "../DynamicGameEntity";
 import Game from "../Game";
-import {Group, Vector3} from "three";
+import {Euler, Group, Quaternion, Vector3} from "three";
 import Transform from "../Transform";
 import RigidBody from "../RigidBody";
+import DualShockGamepad from "../DualShockGamepad";
 
 class PlayerCamera implements CameraHandler {
+
+    static defaultOffset = new Vector3(0, 5, -10);
 
     private watchable: RigidBody;
     private game: Game;
@@ -15,6 +18,7 @@ class PlayerCamera implements CameraHandler {
     constructor(game: Game) {
         this.game = game;
         game.addInputListener(this);
+        console.log(this.offset.length());
     }
 
     watch(entity: RigidBody): void {
@@ -24,8 +28,20 @@ class PlayerCamera implements CameraHandler {
     };
 
     input(): void {
+        const gamepad = this.game.getGamepad();
+        const cameraRotation = DualShockGamepad.getButtonRJoystick(gamepad);
+        const upVectorWatchable = this.offset.normalize().multiplyScalar(11).applyQuaternion(
+            new Quaternion().setFromAxisAngle(new Vector3(0, 1,  0), cameraRotation.x / 20.0)
+        ).applyQuaternion(
+            new Quaternion().setFromAxisAngle(new Vector3(0, 1,  0).cross(this.offset.clone().normalize()), cameraRotation.y / 20.0)
+        );
 
+        this.offset = upVectorWatchable;
 
+        if (DualShockGamepad.getButtonRJoystickPressed(gamepad)) {
+            this.offset = PlayerCamera.defaultOffset.clone()
+                .applyQuaternion(this.watchable.getTransform().getObjectRotation());
+        }
     }
 
     update(step: number): void {

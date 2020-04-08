@@ -14,12 +14,6 @@ class Bullet implements DynamicGameEntity {
 
     constructor(game: Game) {
         this.rigidBody.setMesh(new THREE.Mesh(this.geometry, this.material));
-
-        // this.rigidBody.setObjectRotation(
-        //     new Quaternion()
-        //         .setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2)
-        // );
-        // this.rigidBody.setWorldPosition(new Vector3(0, -0.1, 0));
         game.getScene().add(this.rigidBody.getMesh());
     }
 

@@ -9,6 +9,7 @@ import Transform from "../../engine/Transform";
 import InputListener from "../../engine/InputListener";
 import DualShockGamepad from "../../engine/DualShockGamepad";
 import Timer from "../../engine/Timer";
+import Boost from "../particles/boost/Boost";
 
 class Spaceship implements DynamicGameEntity, InputListener {
     private static SPACESHIP_MESH: THREE.Mesh;
@@ -16,6 +17,8 @@ class Spaceship implements DynamicGameEntity, InputListener {
     private rigidBody: RigidBody = new RigidBody();
     private game: Game;
     private bulletTimer = new Timer(300);
+    private boostReserve: number = 100;
+    private boostTimer = new Timer(30);
 
     constructor(game: Game) {
         Assert.notEqual(Spaceship.SPACESHIP_MESH, null, "Mesh should be initialized before constructing object");
@@ -32,8 +35,48 @@ class Spaceship implements DynamicGameEntity, InputListener {
         Spaceship.SPACESHIP_MESH = mesh;
     }
 
-    public shoot() {
-        if (this.bulletTimer.use()) {
+    update(step: number) {
+        // for the spaceship we apply friction every timestep.
+        const translation = this.getTransform()
+            .getWorldVelocity()
+            .clone()
+            .multiplyScalar(10 / step);
+
+        this.rigidBody.setWorldPosition(
+            this.getTransform().getWorldPosition().clone()
+                .add(translation)
+        )
+    };
+
+    getTransform(): Transform {
+        return this.rigidBody.getTransform();
+    }
+
+    input(): void {
+        this.flyByInput();
+        this.shoot();
+        this.boost();
+    }
+
+    flyByInput(): void {
+        const movement = DualShockGamepad.getButtonLJoystick(this.game.getGamepad());
+
+        // local coordinate space
+        const rotation = new Quaternion()
+            .setFromAxisAngle(new Vector3(0, 0, 1), movement.x / 15)
+            .multiply(
+                new Quaternion()
+                    .setFromAxisAngle(new Vector3(-1, 0, 0), movement.y / 15)
+            );
+
+        this.rigidBody.setObjectRotation(
+            // object coordinate space
+            this.getTransform().getObjectRotation().clone().multiply(rotation)
+        );
+    }
+
+    shoot(): void {
+        if (DualShockGamepad.getButtonR2(this.game.getGamepad()) && this.bulletTimer.use()) {
             const bulletL = new Bullet(this.game);
             const bulletR = new Bullet(this.game);
 
@@ -63,41 +106,24 @@ class Spaceship implements DynamicGameEntity, InputListener {
         }
     }
 
-    update(step: number) {
-        this.rigidBody.update(step);
-    };
+    boost(): void {
+        if (
+            DualShockGamepad.getButtonO(this.game.getGamepad()) &&
+            this.boostTimer.use()
+        ) {
 
-    getTransform(): Transform {
-        return this.rigidBody.getTransform();
-    }
+            const newVelocity = this.rigidBody
+                .getTransform()
+                .getWorldVelocity()
+                .clone()
+                .add(
+                    new Vector3(0, 0, 0.3)
+                        .applyQuaternion(this.rigidBody.getTransform().getObjectRotation())
+                );
 
-    input(): void {
-        const movement = DualShockGamepad.getButtonLJoystick(this.game.getGamepad());
-
-        // local coordinate space
-        const rotation = new Quaternion()
-            .setFromAxisAngle(new Vector3(0, 0, 1), movement.x / 15)
-            .multiply(
-                new Quaternion()
-                    .setFromAxisAngle(new Vector3(-1, 0, 0), movement.y / 15)
-            );
-
-        this.rigidBody.setObjectRotation(
-            // object coordinate space
-            this.getTransform().getObjectRotation().clone().multiply(rotation)
-        );
-
-        this.getTransform().setWorldVelocity(
-            this.getTransform().projectLocalToObjectSpace(
-                new Vector3(0, 0, 0.5)
-            )
-        );
-
-        if (DualShockGamepad.getButtonR2(this.game.getGamepad())) {
-            console.log('shooting');
-            this.shoot();
+            this.rigidBody.getTransform().setWorldVelocity(newVelocity);
+            this.game.getGameState().addObject(new Boost(this.game, this.getTransform().getWorldPosition().clone()));
         }
-
     }
 
     getRigidBody(): RigidBody {
